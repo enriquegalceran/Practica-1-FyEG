@@ -1,0 +1,10 @@
+select *                     
+                       from millimil..MPAHalo                     
+                      where snapnum=63                      
+                        and np between 100 and 10000000                      
+                        and x between 50 and 70                     
+                        and y between 50 and 70                     
+                        and z between 50 and 70         
+                        and m_Crit200 between 10 and 1000         
+                  
+            order by m_Crit200
