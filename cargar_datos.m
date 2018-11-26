@@ -24,11 +24,7 @@ np = a.np(1:max_length);
 redshift = a.redshift(1:max_length,:);
 m_Crit200 = a.m_Crit200(1:max_length,:);
 
-% Cambia el vector de caracteres a doble precisión de ser un caracter
-% Hay que activar estas líneas si se importa antes por Excel Europeo donde
-% la coma y el punto está al revés
-% redshift = limpiar_str(redshift);
-% m_Crit200 = limpiar_str(a.m_Crit200(1:max_length,:));
+
 
 
 %corregir np para posibles pequeños valores donde partículas se hayan

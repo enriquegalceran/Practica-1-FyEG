@@ -1,10 +1,12 @@
 %Dibujar árboles
-[~, ~, ~, mcrit, ~, PNodes, RS, NP, PCrit, a1] = cargar_datos('arbol mas grande menor de 1000.txt', 4);	%Después tocará eliminar
-a2 = tdfread('arbol mas grande menor de 1000G.txt',',');
+% [~, ~, ~, mcrit, ~, PNodes, RS, NP, PCrit, a1] = cargar_datos('arbol mas grande menor de 1000.txt', 4);	%Después tocará eliminar
+% a2 = tdfread('arbol mas grande menor de 1000G.txt',',');
 % [~, ~, ~, mcrit, ~, PNodes, RS, NP, PCrit, a1] = cargar_datos('mas peque.txt', 0);
 % a2 = tdfread('mas pequeG.txt',',');
+[~, ~, ~, mcrit, ~, PNodes, RS, NP, PCrit, a1] = cargar_datos('3000060000000.txt', 4);	%Después tocará eliminar
+a2 = tdfread('3000060000000g.txt',',');
 
-% a3 = cargar_galaxias('mas peque.txt');
+
 magB = zeros(1,length(a1.snapNum));
 magV = magB;
 
@@ -23,18 +25,12 @@ EC = EC';
 
 PT = PNodes';       %no queremos sobreescribir %PT=PuntosTest
 PNum = NP';
-% PNum = log(PNum);
-% PNum = PCrit';
-% PNum = log10(PNum);
-
-PS = RS';
-PTdib = PT';
 
 nodo = 1;
 X = zeros(size(PT));
-Y = PT;
+% Y = PT;
+Y = -log10(1 + RS');
 X(1) = nodo;
-Y(1) = PT(1);
 saltos = [];
 altura = [];
 anchura = [];
@@ -76,7 +72,7 @@ for i = 2: length(PT)
         X(i) = nodo;
         % Dibujar las líneas horizontales
         XR = [X(k),nodo];
-        YR = [PT(k),PT(i)];
+        YR = [Y(k),Y(i)];
         plot(XR,YR, '-k')
     end
 end
@@ -110,27 +106,26 @@ for s = 1:length(saltos)
 end
 plot(X(sap:end),Y(sap:end), '-k')
 
-
-PNs = sort(PNum);
-pos_med = find(PNs<mean(PNs));
-pos_med = pos_med(end);
 [~, pos_max] = max(PNum);
 [~, pos_min] = min(PNum);
 % Poner las figuras de las galaxias coloreadas
 size_mult = 20;
 for i = 1:length(PT)
     if i == pos_max
-        h1 = plot(X(i),Y(i),'o','MarkerFaceColor', 'k', 'MarkerEdgeColor','black','MarkerSize', 25);
-    elseif i == 233
-        h2 = plot(X(i),Y(i),'o','MarkerFaceColor', 'k', 'MarkerEdgeColor','black','MarkerSize', 17);
+        h1 = plot(X(i),Y(i),'o','MarkerFaceColor', 'k', 'MarkerEdgeColor','black','MarkerSize', 25.2);
+    elseif i == 27
+        h2 = plot(X(i),Y(i),'o','MarkerFaceColor', 'k', 'MarkerEdgeColor','black','MarkerSize', 18);
+    elseif i == 512
+        h3 = plot(X(i),Y(i),'o','MarkerFaceColor', 'k', 'MarkerEdgeColor','black','MarkerSize', 8);
     elseif i == pos_min
-        h3 = plot(X(i),Y(i),'o','MarkerFaceColor', 'k', 'MarkerEdgeColor','black','MarkerSize', 3.2);
+        h4 = plot(X(i),Y(i),'o','MarkerFaceColor', 'k', 'MarkerEdgeColor','black','MarkerSize', 4);
     end
     scatter(X(i), Y(i), PNum(i) * size_mult, ...
             'MarkerEdgeColor','black',...
             'MarkerFaceColor',markerColour(i,:));
 %     drawnow %descomentar para tener la animación
 end
+
 
 colormap(jetColorMap);
 cbv=colorbar('v'); %cambiar v(ertical) h(orizontal)
@@ -139,8 +134,18 @@ set(cbv,'YTick',0:1/15:1) %cambiar la cantidad de ticks
 cbv.TickLabels = arrayfun( @num2str,...
                           round(cbv.Ticks * (max_color-min_color) + min_color,3),...
                           'UniformOutput', false );
+                      
+% etiquetas ejes Y y quitamos X
+ylabel(cbv, 'B-V')
+ylabel '-log_1_0(1+z)'
+set(gca, 'XTick', [])
 
-% Leyenda
-legend([h1 h2 h3],'960.148· 10^1^0 Msun/h','1.463· 10^1^0 Msun/h', '1.119· 10^1^0 Msun/h', 'Orientation', 'horizontal')
+
+% Leyenda tamaños
+legend([h1 h2 h3 h4],'1478.95· 10^1^0 Msun/h','975.29· 10^1^0 Msun/h',...
+    '142.18· 10^1^0 Msun/h', '1.29· 10^1^0 Msun/h',...
+    'Orientation', 'horizontal',...
+    'Location', 'south')
+
 legend boxoff
 
