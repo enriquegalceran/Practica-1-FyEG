@@ -3,14 +3,14 @@ clear
 
 masa_Crit200 = 1e10; %M_sun/h
 
-path_Data = 'Data\8-10\';
-path_DataG = 'Data\8-10G\';
+% path_Data = 'Data\8-10\';
+% path_DataG = 'Data\8-10G\';
 % path_Data = 'Data\10-11.5\';
 % path_DataG = 'Data\10-11.5G\';
 % path_Data = 'Data\11.5-12.5\';
 % path_DataG = 'Data\11.5-12.5G\';
-% path_Data = 'Data\12.5\';
-% path_DataG = 'Data\12.5G\';
+path_Data = 'Data\12.5\';
+path_DataG = 'Data\12.5G\';
 
 
 Ajustar_monotona_decreciente = 4;
@@ -110,16 +110,31 @@ for i = 1:n_data
         end
     end
 end
+for i = 1:length(valores_medios)
+    valores_medios(i) = (valores_medios(i)/numero_medios(i));
+end
+for i = 2:length(valores_medios)
+    valores_medios(i) = log10(valores_medios(i)/valores_medios(1));
+end
+valores_medios(1) = 0;
+for i = 1:n_data
+    for j = 2:length(valores_medios)
+        tabla_completa(j,i) = tabla_completa(j,i)/tabla_completa(1,i);
+    end
+end
+tabla_completa(1,:) = ones(size(tabla_completa(1,:)));
+
 desviacion_std = zeros(1,63);
 % Desviación
 for i = 1:63
     desviacion_std(i) = std(nonzeros(tabla_completa(i,:)));
 end
 desviacion_std(isnan(desviacion_std)) = [];
+valores_medios(isnan(valores_medios)) = [];
 
-[~, indx] = max(all_max_len);
+
 figure(3)
-errorbar(log10(1+all_redshift(1:all_max_len(indx),indx)),log10(valores_medios(1:all_max_len(indx))/valores_medios(1)), log10(desviacion_std));
+errorbar(log10(1+redshift_dibujar(1:length(valores_medios))),valores_medios, desviacion_std);
 title 'media MCrit'
 saveas(gcf, sprintf('DibAuto/Media MCrit200 %s.png',path_Data(6:end-1))) 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -138,29 +153,41 @@ for i = 1:n_data
         end
     end
 end
+for i = 1:length(valores_mediosG)
+    valores_mediosG(i) = (valores_mediosG(i)/numero_mediosG(i));
+end
+for i = 2:length(valores_mediosG)
+    valores_mediosG(i) = log10(valores_mediosG(i)/valores_mediosG(1));
+end
+valores_mediosG(1) = 0;
+for i = 1:n_data
+    for j = 2:length(valores_mediosG)
+        tabla_completaG(j,i) = tabla_completaG(j,i)/tabla_completaG(1,i);
+    end
+end
+tabla_completaG(1,:) = ones(size(tabla_completaG(1,:)));
+
+
 desviacion_stdG = zeros(1,63);
 % Desviación
 for i = 1:63
     desviacion_stdG(i) = std(nonzeros(tabla_completaG(i,:)));
 end
-desviacion_stdG(isnan(desviacion_stdG)) = 0;
-[~, indxG] = max(all_max_lenG);
-for i = 1: 63
-    if valores_mediosG(i) == 0
-        indxG2 = i-1;
-        break
-    end
-end
+desviacion_stdG(isnan(desviacion_stdG)) = [];
+valores_mediosG(isnan(valores_mediosG)) = [];
+
+% if path_DataG(6) == '8', indxG = 10; end
+
 figure(4)
-errorbar(log10(1+redshift_dibujar(1:indxG2)),log10(valores_mediosG(1:indxG2)/valores_mediosG(1))', log10(desviacion_stdG(1:indxG2)));
+errorbar(log10(1+redshift_dibujar(1:length(valores_mediosG))),valores_mediosG, desviacion_stdG);
 title 'media bariones'
 saveas(gcf, sprintf('DibAuto/Media Bariones %s.png',path_Data(6:end-1))) 
 
 figure(5)
 clf
 hold on
-errorbar(log10(1+all_redshift(1:all_max_len(indx),indx)),log10(valores_medios(1:all_max_len(indx))/valores_medios(1)), log10(desviacion_std))
-errorbar(log10(1+redshift_dibujar(1:indxG2)),log10(valores_mediosG(1:indxG2)/valores_mediosG(1))', log10(desviacion_stdG(1:indxG2)));
+errorbar(log10(1+redshift_dibujar(1:length(valores_medios))),valores_medios, desviacion_std);
+errorbar(log10(1+redshift_dibujar(1:length(valores_mediosG))),valores_mediosG, desviacion_stdG);
 title(path_Data(6:end-1))
 legend('DM', 'Bariones')
 saveas(gcf, sprintf('DibAuto/Media Ambos %s.png',path_Data(6:end-1)))
@@ -168,11 +195,11 @@ saveas(gcf, sprintf('DibAuto/Media Ambos %s.png',path_Data(6:end-1)))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Guardar todo
-X1 = log10(1+all_redshift(1:all_max_len(indx),indx));
-Y1 = log10(valores_medios(1:all_max_len(indx))/valores_medios(1));
-Z1 = log10(desviacion_std);
-X2 = log10(1+redshift_dibujar(1:indxG2));
-Y2 = log10(valores_mediosG(1:indxG2)/valores_mediosG(1))';
-Z2 = log10(desviacion_stdG(1:indxG2));
+X1 = log10(1+redshift_dibujar(1:length(valores_medios)));
+Y1 = valores_medios;
+Z1 = desviacion_std;
+X2 = log10(1+redshift_dibujar(1:length(valores_mediosG)));
+Y2 = valores_mediosG;
+Z2 = desviacion_stdG;
 
 save(sprintf('Variables/Datos %s.mat',path_Data(6:end-1)),'X1', 'Y1', 'Z1', 'X2', 'Y2', 'Z2')
