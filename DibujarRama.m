@@ -9,6 +9,7 @@ a2 = tdfread('3000060000000g.txt',',');
 
 magB = zeros(1,length(a1.snapNum));
 magV = magB;
+SteMass = magB;
 
 for i = 1:length(a1.snapNum)
     for j = 1:length(a2.snapnum)
@@ -19,12 +20,26 @@ for i = 1:length(a1.snapNum)
         end
     end
 end
+for i = 1:length(a1.snapNum)
+    for j = 1:length(a2.snapnum)
+        if a1.haloID(i) == a2.haloID(j)
+            SteMass(i) = SteMass(i) + a2.stellarMass(j);
+        end
+    end
+end
 
 EC = magB - magV;
 EC = EC';
-
 PT = PNodes';       %no queremos sobreescribir %PT=PuntosTest
 PNum = NP';
+% for i = 1:length(PNum)
+%     if SteMass(i) ~= 0 
+%         EC(i) = log10(SteMass(i)/PNum(i));
+%     else
+%         EC(i) = NaN;
+%     end
+% end
+
 
 nodo = 1;
 X = zeros(size(PT));
@@ -44,16 +59,21 @@ jetColorMap = jet(resolucion_colores);
 markerColour = zeros(length(EC),3);
 markerindex2 = zeros(1,length(EC));
 min_color = min(EC);
-max_color = max(EC);
+max_color = max(nonzeros(EC));
 markerindex = linspace(min_color,max_color,resolucion_colores);
 
 for p = 1:length(EC)
-    t = 1;
-    while markerindex(t) < EC(p)
-        t = t + 1;
+%     if isnan(EC(p)) == 0
+    if EC(p) ~= 0
+        t = 1;
+        while markerindex(t) < EC(p)
+            t = t + 1;
+        end
+        markerindex2(p) = t;
+        markerColour(p,:) = jetColorMap(t,:);
+    else
+        markerColour(p,:) = [1,1,1];
     end
-    markerindex2(p) = t;
-    markerColour(p,:) = jetColorMap(t,:);
 end
 
 % Calcular
@@ -136,14 +156,15 @@ cbv.TickLabels = arrayfun( @num2str,...
                           'UniformOutput', false );
                       
 % etiquetas ejes Y y quitamos X
+% ylabel(cbv, 'log_1_0(M_s_t_e_l_l_a_r/M_D_M)')
 ylabel(cbv, 'B-V')
 ylabel '-log_1_0(1+z)'
 set(gca, 'XTick', [])
 
 
 % Leyenda tamaños
-legend([h1 h2 h3 h4],'1478.95· 10^1^0 Msun/h','975.29· 10^1^0 Msun/h',...
-    '142.18· 10^1^0 Msun/h', '1.29· 10^1^0 Msun/h',...
+legend([h1 h2 h3 h4],'1478.95· 10^1^0 M_s_u_n/h','975.29· 10^1^0 M_s_u_n/h',...
+    '142.18· 10^1^0 M_s_u_n/h', '1.29· 10^1^0 M_s_u_n/h',...
     'Orientation', 'horizontal',...
     'Location', 'south')
 

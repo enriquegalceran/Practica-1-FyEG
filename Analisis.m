@@ -5,12 +5,12 @@ masa_Crit200 = 1e10; %M_sun/h
 
 % path_Data = 'Data\8-10\';
 % path_DataG = 'Data\8-10G\';
-% path_Data = 'Data\10-11.5\';
-% path_DataG = 'Data\10-11.5G\';
+path_Data = 'Data\10-11.5\';
+path_DataG = 'Data\10-11.5G\';
 % path_Data = 'Data\11.5-12.5\';
 % path_DataG = 'Data\11.5-12.5G\';
-path_Data = 'Data\12.5\';
-path_DataG = 'Data\12.5G\';
+% path_Data = 'Data\12.5\';
+% path_DataG = 'Data\12.5G\';
 
 
 Ajustar_monotona_decreciente = 4;
@@ -78,8 +78,10 @@ hold on
 for j = 1:n_data
     plot(log10(1+all_redshift(1:all_max_len(j),j)),log10(dall_m_Crit200(1:all_max_len(j),j)/dall_m_Crit200(1,j)))
 end
-title 'mCrit200'
-saveas(gcf, sprintf('DibAuto/MCrit200 %s.png',path_Data(6:end-1))) 
+title(path_Data(6:end-1))
+xlabel('log_1_0(1+z)')
+ylabel('log_1_0(M_C_r_i_t_2_0_0/M_C_r_i_t(z=0))')
+saveas(gcf, sprintf('DibAuto/MCrit%s.png',path_Data(6:end-1))) 
 
 dall_stellar = all_stellarG * masa_Crit200;
 figure(2)
@@ -88,8 +90,10 @@ hold on
 for j = 1:n_data
     plot(log10(1+all_redshift(1:all_max_len(j),j)),log10(dall_stellar(1:all_max_len(j),j)/dall_stellar(1,j)))
 end
-title 'Bariones'
-saveas(gcf, sprintf('DibAuto/Bariones %s.png',path_Data(6:end-1))) 
+title(path_Data(6:end-1))
+xlabel('log_1_0(1+z)')
+ylabel('log_1_0(M_S_t_e_l_l_a_r/M_S_t_e_l_l_a_r(z=0))')
+saveas(gcf, sprintf('DibAuto/Bariones%s.png',path_Data(6:end-1))) 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Ahora calculamos la media DM
@@ -135,8 +139,10 @@ valores_medios(isnan(valores_medios)) = [];
 
 figure(3)
 errorbar(log10(1+redshift_dibujar(1:length(valores_medios))),valores_medios, desviacion_std);
-title 'media MCrit'
-saveas(gcf, sprintf('DibAuto/Media MCrit200 %s.png',path_Data(6:end-1))) 
+title(['Media ', path_Data(6:end-1)])
+xlabel('log_1_0(1+z)')
+ylabel('log_1_0(M_C_r_i_t_2_0_0/M_C_r_i_t(z=0))')
+saveas(gcf, sprintf('DibAuto/MediaMCrit%s.png',path_Data(6:end-1))) 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 valores_mediosG = zeros(1,63);
 numero_mediosG = valores_mediosG;
@@ -180,15 +186,19 @@ valores_mediosG(isnan(valores_mediosG)) = [];
 
 figure(4)
 errorbar(log10(1+redshift_dibujar(1:length(valores_mediosG))),valores_mediosG, desviacion_stdG);
-title 'media bariones'
-saveas(gcf, sprintf('DibAuto/Media Bariones %s.png',path_Data(6:end-1))) 
+title(path_Data(6:end-1))
+xlabel(['Media ', 'log_1_0(1+z)'])
+ylabel('log_1_0(M_S_t_e_l_l_a_r/M_S_t_e_l_l_a_r(z=0))')
+saveas(gcf, sprintf('DibAuto/MediaBariones%s.png',path_Data(6:end-1))) 
 
 figure(5)
 clf
 hold on
 errorbar(log10(1+redshift_dibujar(1:length(valores_medios))),valores_medios, desviacion_std);
 errorbar(log10(1+redshift_dibujar(1:length(valores_mediosG))),valores_mediosG, desviacion_stdG);
-title(path_Data(6:end-1))
+title(['Media ambos ', path_Data(6:end-1)])
+xlabel('log_1_0(1+z)')
+ylabel('log_1_0(M/M(z=0))')
 legend('DM', 'Bariones')
 saveas(gcf, sprintf('DibAuto/Media Ambos %s.png',path_Data(6:end-1)))
 

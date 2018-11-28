@@ -13,6 +13,8 @@ load('Variables/Datos 12.5.mat')
 plot(X1,Y1)
 legend('8-10', '10-11.5', '11.5-12.5', '12.5')
 title 'MCrit200'
+xlabel('log_1_0(1+z)')
+ylabel('log_1_0(M/M(z=0))')
 saveas(gcf,'DibAuto/DM sin barras.png')
 
 % bariones sin barras de error
@@ -29,6 +31,8 @@ load('Variables/Datos 12.5.mat')
 plot(X2,Y2)
 legend('8-10', '10-11.5', '11.5-12.5', '12.5')
 title 'Bariones'
+xlabel('log_1_0(1+z)')
+ylabel('log_1_0(M/M(z=0))')
 saveas(gcf,'DibAuto/Bariones sin barras.png')
 
 % DM con barras de error
@@ -45,6 +49,8 @@ load('Variables/Datos 12.5.mat')
 errorbar(X1,Y1,Z1)
 legend('8-10', '10-11.5', '11.5-12.5', '12.5')
 title 'MCrit200'
+xlabel('log_1_0(1+z)')
+ylabel('log_1_0(M/M(z=0))')
 saveas(gcf,'DibAuto/DM con barras.png')
 
 % Bariones con barras de error
@@ -61,4 +67,6 @@ load('Variables/Datos 12.5.mat')
 errorbar(X2,Y2,Z2)
 legend('8-10', '10-11.5', '11.5-12.5', '12.5')
 title 'Bariones'
+xlabel('log_1_0(1+z)')
+ylabel('log_1_0(M/M(z=0))')
 saveas(gcf,'DibAuto/Bariones con barras.png')

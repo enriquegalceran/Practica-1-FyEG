@@ -23,6 +23,8 @@ plot(X1,Y1+Z1, ':k')
 plot(X1,Y1-Z1, ':k')
 legend([h1 h2 h3 h4], '8-10', '10-11.5', '11.5-12.5', '12.5')
 title 'MCrit200'
+xlabel('log_1_0(1+z)')
+ylabel('log_1_0(M/M(z=0))')
 saveas(gcf,'DibAuto/DM con barras alt.png')
 
 % Bariones con barras de error
@@ -47,4 +49,6 @@ plot(X2,Y2+Z2, ':k')
 plot(X2,Y2-Z2, ':k')
 legend([h1 h2 h3 h4], '8-10', '10-11.5', '11.5-12.5', '12.5')
 title 'Bariones'
+xlabel('log_1_0(1+z)')
+ylabel('log_1_0(M/M(z=0))')
 saveas(gcf,'DibAuto/Bariones con barras alt.png')
